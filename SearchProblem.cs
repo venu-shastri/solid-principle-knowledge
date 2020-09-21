@@ -15,7 +15,7 @@ public void AddNewPatient(Patient model) { ListOfPatients.Add(model);}
 
 
 }
-
+//Open Close Principle  Issues
 public class PatientSeacrhService{
 
   public IEnumerable<Patient> GetAllPatients(){
