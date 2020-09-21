@@ -15,6 +15,21 @@ public void AddNewPatient(Patient model) { ListOfPatients.Add(model);}
 
 
 }
+
+public interface ISearchFilter{
+ 
+  bool Search(Patient source);
+}
+
+public class SearchByMrnFilter:ISearchFilter{
+ 
+  string mrn;
+  public SearchByMrn(string mrn){ this.mrn=mrn;}
+  public bool Search(Patient source){
+    
+    return source.MRN==tjis.mrn;
+  }
+}
 //Open Close Principle  Issues
 public class PatientSeacrhService{
 
@@ -22,18 +37,21 @@ public class PatientSeacrhService{
     return PatientRepository.ListOfPatients;
   }
   
-  public Patient SearchByMRN(string mrn)
+  public IEnumerable<Patient> SearchByCriteria(ISerachFilter filter)
   {
-      //Search Based On MRN
-      return default(Patient)
+    List<Patient> _resultList=new List<Patient>();
+    foreach(Patient p in this.GetAllPatients){
+      if(filter.Search(p)){
+        _resultList.Add(p);
+      }
+    }
+    return _resultList;
+         
   }
-  public IEnumerable<Patient> SearchByName(string name){
-  
-  }
-}
 
 public class Main(){
 
   SearchService _service=new SearchService();
-  _service.SearchByMRN("MRN001");
+  ISearchFilter _filter=new SearchByMrnFilter("MRN001");
+ IEnumerable<Patient> _patients= _service.SearchByCriteria(_filter);
 }
