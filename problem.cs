@@ -1,28 +1,48 @@
-public class Printer{
 
-  public void Print(){ }
+public interface IPrintScanner{
+ 
+  void Print();
+  
 }
 
-public class Scanner{
+public interface IScanner{
+ 
+  void Scan();
+}
+public class Printer :IPrinter{
+
+  public void Print(){ }
+  
+}
+
+public class Scanner : IScanner{
 
 public void Scan(){}
 
 }
 
-public class PrintScanner : Printer, Scanner{
+public class PrintScanner:IPrinter,IScanner{
 
-
+  Printer pObj=new Printer();
+  Scanner sObj=new Scanner();
+  public void Print(){
+    pObj.Print(); // Delegation 
+  }
+public void Scan(){
+ 
+  sObj.Scan();
+}
 
 }
 
 public class DeviceManager{
 
-public void PrintTask(Printer p){
+public void PrintTask(IPrinter p){
 
   p.Print();
 }
 
-public void Scantask(Scanner s){
+public void Scantask(IScanner s){
 
   s.Scan();
 }
