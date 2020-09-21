@@ -1,8 +1,4 @@
-namespace FatInterface
-{
-
-    
-    public interface Door  
+public interface Door  
     {
         void Lock();
         void UnLock();
@@ -13,7 +9,10 @@ namespace FatInterface
     {
         public void Register(int timeInterval,Door  client) {
 
-            client.TimeOutCallback();
+           if(client is TimedDoor)
+            {
+                client.TimeOutCallback();
+            }
        }
     }
    
