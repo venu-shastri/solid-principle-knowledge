@@ -30,6 +30,15 @@ public class SearchByMrnFilter:ISearchFilter{
     return source.MRN==tjis.mrn;
   }
 }
+public class SearchByNameFilter:ISearchFilter{
+ 
+  string name;
+  public SearchByMrn(string name){ this.name=name;}
+  public bool Search(Patient source){
+    
+    return source.Name==this.name;
+  }
+}
 //Open Close Principle  Issues
 public class PatientSeacrhService{
 
@@ -48,10 +57,39 @@ public class PatientSeacrhService{
     return _resultList;
          
   }
+ 
+  public IEnumerable<Patient> SearchByCriteriaUsingDelegates(Func<Patient,bool> filterAddress)
+  {
+    List<Patient> _resultList=new List<Patient>();
+    foreach(Patient p in this.GetAllPatients){
+      if(filterAddress.Invoke(p)){
+        _resultList.Add(p);
+      }
+    }
+    return _resultList;
+         
+  }
+ 
 
-public class Main(){
+ 
+
+public class MainClass()
+{
+ static bool SearchByPin(Patient){
+  
+  return Patient.PinCode=="5600077";
+ }
+ 
+ static void Main(){
 
   SearchService _service=new SearchService();
   ISearchFilter _filter=new SearchByMrnFilter("MRN001");
+ _filter=new SearchByNameFilter("Tom");
  IEnumerable<Patient> _patients= _service.SearchByCriteria(_filter);
+  
+  Func<Patient,bool> _funPtr=new Func<Patient,bool>(MainClass.SearchByPin);
+  _service.SearchByCriteriaUsingDelegates(_funPtr);
+  
+  _service.SearchByCriteriaUsingDelegates((Patient p)=>{ return p.Name=="Hary"});
+ 
 }
